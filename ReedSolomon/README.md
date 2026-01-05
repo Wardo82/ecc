@@ -23,4 +23,6 @@ Sobre polinomios. Una de las caracteristicas mas importantes de los polinomios:
 ## Lista de scripts
 
 1. Polinomios y como funciona un algebra de polinomios.
-2. 
+2. Codigos Reed-Solomon a traves de evaluacion de polinomios
+3. Codigos Reed-Solomon sistematicos
+4. Codigos Reed-Solomon a traves de coefficientes de polinomios

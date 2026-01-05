@@ -15,6 +15,7 @@ The encoding and decoding parties must come up with some fixed parameters of the
     - Agree that the code word is formed by evaluating p(x) at the numbers of x that were agreed on in the previous step.
 
 """
+import itertools
 import numpy as np
 import numpy.polynomial as poly
 import random
@@ -27,25 +28,25 @@ k = 4
 # We want to 2 redundant symbols, so the code word has length n of 6.
 n = 6
 # The polynomial p(x) is always evaluated for the following values of x: (−1,0,1,2,3,4). Note that there are as many values xi as there are symbols in a code word.
-points = [-1, 0, 1, 2, 3, 4]
+x = [-1, 0, 1, 2, 3, 4]
 
-def encode(message, points):
+def encode(message, x):
     # Crea un polynomio donde los simbolos del mensaje son los coeficientes
     p = poly.Polynomial(message)
 
     # Evalua el polynomio en los puntos establecidos en el protocolo
-    codeword = p(points)
+    codeword = p(x)
 
     return codeword
 
 message = [2, 3, -5, 1]
-codeword = encode(message, points)
+codeword = encode(message, x)
 print(f"Mensaje: {message} -> Codigo: {codeword}")
 
-def decode(codeword, points, k):
+def decode(codeword, x, k):
     n = len(codeword)
     # Empareja el mensaje codificado con los puntos preestablecidos en el protocol
-    pairs = list(zip(points, codeword))
+    pairs = list(zip(x, codeword))
     # Toma k de n puntos para obtener los coefficientes del polynomio de grado k-1
     indexes = random.sample(range(0, n), k)
     x = [pairs[i][0] for i in indexes]
@@ -56,10 +57,39 @@ def decode(codeword, points, k):
     message = np.linalg.solve(A, b)
     return message
 
-message = decode(codeword, points, k)
+message = decode(codeword, x, k)
 print(f"Mensaje recibido: {message}")
 
 # Corrigiendo errores:
 # Para corregir hasta s errores, necesitamos al menos 2s simbolos de redundancia (extra).
+def decode_and_correct(codeword, x, k):
+    """
+    Algoritmo del paper original de Reed-Solomon
+    """
+    n = len(codeword)
+    # Empareja el mensaje codificado con los puntos preestablecidos en el protocol
+    pairs = list(zip(x, codeword))
+    # Calcula todas las combinaciones posibles de pares
+    coefficients = {}
+    current_max = 0
+    message = ()
+    for comb in itertools.combinations(pairs, k):
+        # Obten los coefficientes tal como en decode()
+        x = [pair[0] for pair in comb]
+        b = [pair[1] for pair in comb]
+        A = build_vandermonde(x)
+        cs = np.linalg.solve(A, b)
+        coeffs = str(cs)
+        if coeffs not in coefficients:
+            coefficients[coeffs] = 1
+        else:
+            coefficients[coeffs] += 1
 
-# TODO: A Simple Error Correcting Reed Solomon Decoder
+        if coefficients[coeffs] > current_max:
+            message = cs
+            current_max = coefficients[coeffs]
+    return message
+
+codeword[2] = 6 # Introduce un error en el tercer simbolo 
+message = decode_and_correct(codeword, x, k)
+print(f"Codigo recibido: {codeword} - Mensaje corregido: {message}")
