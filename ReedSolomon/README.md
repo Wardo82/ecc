@@ -4,7 +4,7 @@ Esta carpeta contiene codigo para entender y explorar codigos Reed-Solomon desde
 
 Todo parte de este gran articulo [Reed-Solomon Error Correcting Codes from the bottom up](https://tomverbeure.github.io/2022/08/07/Reed-Solomon.html). En esta carpeta tomare las ideas de ahi y las implemento en Python.
 
-La meta en ensenarme a mi mismo, si le sirve a alguien mas, mejor.
+La meta es ensenarme a mi mismo, si le sirve a alguien mas, mejor.
 
 ## Introduccion
 
@@ -25,4 +25,5 @@ Sobre polinomios. Una de las caracteristicas mas importantes de los polinomios:
 1. Polinomios y como funciona un algebra de polinomios.
 2. Codigos Reed-Solomon a traves de evaluacion de polinomios
 3. Codigos Reed-Solomon sistematicos
-4. Codigos Reed-Solomon a traves de coefficientes de polinomios
+4. Codigos Reed-Solomon a traves de coefficientes de polinomios (1 error)
+5. Codigos Reed-Solomon a traves de coefficientes de polinomios (t errores con polinomio de localizacion de errores)
